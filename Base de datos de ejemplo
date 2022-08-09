@@ -91,3 +91,22 @@ join detalle d on f.num_factura = d.id_factura
 join producto p on p.id_producto = d.id_producto
 join categorias ca on ca.id_categoria = p.id_categoria
 where c.id_cliente = '111'
+
+
+--validacion de transacción: problemas en llaves primarias o foraneas
+begin tran
+	insert into producto values
+	('P121','Frijoles',3000,2200,'C111');
+	insert into producto values
+	('P110','Arequipito',3000,2200,'C188');
+
+	if(@@ERROR<>0)
+		begin
+			rollback --cancelar las transacciones pendientes y liberar memoria
+			print N'Error inesperado contacte al administrador...'
+		end
+	else
+		begin
+			commit
+			print('OK')
+		end
